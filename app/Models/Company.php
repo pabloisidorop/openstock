@@ -17,6 +17,14 @@ class Company extends Model
     ];
 
     /**
+     * @return HasMany<Location, $this>
+     */
+    public function locations(): HasMany
+    {
+        return $this->hasMany(Location::class);
+    }
+
+    /**
      * @return HasMany<Product, $this>
      */
     public function products(): HasMany
