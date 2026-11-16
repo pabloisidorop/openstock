@@ -39,6 +39,14 @@ class Location extends Model
     }
 
     /**
+     * @return BelongsTo<LocationType, $this>
+     */
+    public function locationType(): BelongsTo
+    {
+        return $this->belongsTo(LocationType::class);
+    }
+
+    /**
      * @return HasMany<Location, $this>
      */
     public function children(): HasMany

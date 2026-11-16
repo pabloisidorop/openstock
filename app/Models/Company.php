@@ -33,6 +33,14 @@ class Company extends Model
     }
 
     /**
+     * @return HasMany<LocationType, $this>
+     */
+    public function locationTypes(): HasMany
+    {
+        return $this->hasMany(LocationType::class);
+    }
+
+    /**
      * @return BelongsTo<User, $this>
      */
     public function creator(): BelongsTo
