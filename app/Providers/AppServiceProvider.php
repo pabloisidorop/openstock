@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Http\Middleware\SetActiveCompany;
+use App\Http\Middleware\SetLocale;
 use App\Support\CurrentCompany;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
@@ -30,6 +31,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Livewire::addPersistentMiddleware([
             SetActiveCompany::class,
+            SetLocale::class,
         ]);
 
         $this->configureDefaults();

@@ -10,80 +10,77 @@
                 <flux:sidebar.collapse class="lg:hidden" />
             </flux:sidebar.header>
 
+            @php
+                $activeCompany = request()->attributes->get('activeCompany');
+                $companies = auth()->user()->companies;
+            @endphp
 
-@php
-    $activeCompany = request()->attributes->get('activeCompany');
-    $companies = auth()->user()->companies;
-@endphp
+            @if ($activeCompany)
+                <div class="px-3 py-3">
+                    <div class="text-xs text-zinc-500 dark:text-zinc-400">
+                        {{ __('common.active_workspace') }}
+                    </div>
 
-@if ($activeCompany)
-    <div class="px-3 py-3">
-        <div class="text-xs text-zinc-500 dark:text-zinc-400">
-            ACTIVE WORKSPACE
-        </div>
+                    <div class="mt-1 truncate text-sm font-semibold text-zinc-900 dark:text-white">
+                        {{ $activeCompany->name }}
+                    </div>
 
-        <div class="mt-1 truncate text-sm font-semibold text-zinc-900 dark:text-white">
-            {{ $activeCompany->name }}
-        </div>
+                    @if ($companies->count() > 1)
+                        <form method="POST" action="{{ route('companies.switch') }}" class="mt-2">
+                            @csrf
 
-        @if ($companies->count() > 1)
-            <form method="POST" action="{{ route('companies.switch') }}" class="mt-2">
-                @csrf
+                            <select
+                                name="company_id"
+                                onchange="this.form.submit()"
+                                class="w-full rounded-lg border border-zinc-300 bg-white px-2 py-2 text-xs text-zinc-800 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
+                            >
+                                @foreach ($companies as $company)
+                                    <option
+                                        value="{{ $company->id }}"
+                                        @selected($company->id === $activeCompany->id)
+                                    >
+                                        {{ $company->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </form>
+                    @endif
+                </div>
+            @endif
 
-                <select
-                    name="company_id"
-                    onchange="this.form.submit()"
-                    class="w-full rounded-lg border border-zinc-300 bg-white px-2 py-2 text-xs text-zinc-800 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
-                >
-                    @foreach ($companies as $company)
-                        <option
-                            value="{{ $company->id }}"
-                            @selected($company->id === $activeCompany->id)
-                        >
-                            {{ $company->name }}
-                        </option>
-                    @endforeach
-                </select>
-            </form>
-        @endif
-    </div>
-@endif
+            <flux:sidebar.nav>
+                <flux:sidebar.group :heading="__('common.workspace')" class="grid">
+                    <flux:sidebar.item :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
+                        {{ __('common.dashboard') }}
+                    </flux:sidebar.item>
 
+                    <flux:sidebar.item :href="route('products')" :current="request()->routeIs('products')" wire:navigate>
+                        {{ __('common.products') }}
+                    </flux:sidebar.item>
 
-<flux:sidebar.nav>
+                    <flux:sidebar.item :href="route('locations')" :current="request()->routeIs('locations')" wire:navigate>
+                        {{ __('common.locations') }}
+                    </flux:sidebar.item>
 
-    <flux:sidebar.group heading="Workspace" class="grid">
-        <flux:sidebar.item  :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
-            Dashboard
-        </flux:sidebar.item>
+                    <flux:sidebar.item :href="route('inventory')" :current="request()->routeIs('inventory')" wire:navigate>
+                        {{ __('common.inventory') }}
+                    </flux:sidebar.item>
 
-        <flux:sidebar.item :href="route('products')" :current="request()->routeIs('products')" wire:navigate>
-            Products
-        </flux:sidebar.item>
+                    <flux:sidebar.item :href="route('transactions')" :current="request()->routeIs('transactions')" wire:navigate>
+                        {{ __('common.transactions') }}
+                    </flux:sidebar.item>
+                </flux:sidebar.group>
 
-        <flux:sidebar.item :href="route('locations')" :current="request()->routeIs('locations')" wire:navigate>
-            Locations
-        </flux:sidebar.item>
+                <flux:sidebar.group :heading="__('common.operations')" class="grid">
+                    <flux:sidebar.item icon="shopping-cart" :href="route('orders')" :current="request()->routeIs('orders')" wire:navigate>
+                        {{ __('common.orders') }}
+                    </flux:sidebar.item>
 
-        <flux:sidebar.item :href="route('inventory')" :current="request()->routeIs('inventory')" wire:navigate>
-            Inventory
-        </flux:sidebar.item>
-
-        <flux:sidebar.item :href="route('transactions')" :current="request()->routeIs('transactions')" wire:navigate>
-            Transactions
-        </flux:sidebar.item>
-    </flux:sidebar.group>
-
-    <flux:sidebar.group heading="Operations" class="grid">
-        <flux:sidebar.item icon="shopping-cart" :href="route('orders')" :current="request()->routeIs('orders')" wire:navigate>
-            Orders
-        </flux:sidebar.item>
-
-        <flux:sidebar.item icon="truck" :href="route('suppliers')" :current="request()->routeIs('suppliers')" wire:navigate>
-            Suppliers
-        </flux:sidebar.item>
-    </flux:sidebar.group>
-</flux:sidebar.nav>
+                    <flux:sidebar.item icon="truck" :href="route('suppliers')" :current="request()->routeIs('suppliers')" wire:navigate>
+                        {{ __('common.suppliers') }}
+                    </flux:sidebar.item>
+                </flux:sidebar.group>
+            </flux:sidebar.nav>
 
             <flux:spacer />
 
@@ -123,7 +120,7 @@
 
                     <flux:menu.radio.group>
                         <flux:menu.item :href="route('profile.edit')" icon="cog" wire:navigate>
-                            {{ __('Settings') }}
+                            {{ __('common.settings') }}
                         </flux:menu.item>
                     </flux:menu.radio.group>
 
@@ -138,7 +135,7 @@
                             class="w-full cursor-pointer"
                             data-test="logout-button"
                         >
-                            {{ __('Log out') }}
+                            {{ __('common.logout') }}
                         </flux:menu.item>
                     </form>
                 </flux:menu>

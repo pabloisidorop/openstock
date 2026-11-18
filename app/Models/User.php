@@ -25,8 +25,9 @@ use Illuminate\Support\Str;
  * @property string|null $remember_token
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property string|null $locale
  */
-#[Fillable(['name', 'email', 'password'])]
+#[Fillable(['name', 'email', 'password', 'locale'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable
 {

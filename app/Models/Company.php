@@ -14,6 +14,7 @@ class Company extends Model
         'name',
         'slug',
         'created_by',
+        'default_locale',
     ];
 
     /**

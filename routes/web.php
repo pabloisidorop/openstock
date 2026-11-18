@@ -35,23 +35,23 @@ Route::middleware(['auth', 'verified', SetActiveCompany::class])->group(function
     Route::livewire('products', 'products')->name('products');
 
     Route::view('locations', 'pages.placeholder', [
-        'section' => 'Locations',
+        'section' => 'locations',
     ])->name('locations');
 
     Route::view('inventory', 'pages.placeholder', [
-        'section' => 'Inventory',
+        'section' => 'inventory',
     ])->name('inventory');
 
     Route::view('transactions', 'pages.placeholder', [
-        'section' => 'Transactions',
+        'section' => 'transactions',
     ])->name('transactions');
 
     Route::view('orders', 'pages.placeholder', [
-        'section' => 'Orders',
+        'section' => 'orders',
     ])->name('orders');
 
     Route::view('suppliers', 'pages.placeholder', [
-        'section' => 'Suppliers',
+        'section' => 'suppliers',
     ])->name('suppliers');
 });
 

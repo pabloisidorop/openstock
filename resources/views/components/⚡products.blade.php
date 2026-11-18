@@ -47,7 +47,7 @@ new class extends Component
 
         unset($this->products);
 
-        session()->flash('status', 'Product created successfully.');
+        session()->flash('status', __('common.product_created'));
     }
 
     #[Computed]
@@ -64,11 +64,11 @@ new class extends Component
 <div class="flex flex-col gap-6 p-6">
     <div>
         <h1 class="text-2xl font-semibold text-zinc-900 dark:text-white">
-            Products
+            {{ __('common.products') }}
         </h1>
 
         <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-            Manage the products belonging to this workspace.
+            {{ __('common.manage_products') }}
         </p>
     </div>
 
@@ -80,14 +80,14 @@ new class extends Component
 
     <div class="rounded-xl border border-neutral-200 p-6 dark:border-neutral-700">
         <h2 class="mb-5 text-lg font-semibold text-zinc-900 dark:text-white">
-            Create product
+            {{ __('common.create_product') }}
         </h2>
 
         <form wire:submit="save" class="space-y-5">
             <div class="grid gap-5 md:grid-cols-2">
                 <div>
                     <label for="sku" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                        SKU *
+                        {{ __('common.sku') }} *
                     </label>
 
                     <input
@@ -105,7 +105,7 @@ new class extends Component
 
                 <div>
                     <label for="name" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                        Product name *
+                        {{ __('common.product_name') }} *
                     </label>
 
                     <input
@@ -123,7 +123,7 @@ new class extends Component
 
             <div>
                 <label for="description" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                    Description
+                    {{ __('common.description') }}
                 </label>
 
                 <textarea
@@ -145,7 +145,7 @@ new class extends Component
                         wire:model="is_active"
                         class="rounded border-zinc-300"
                     >
-                    Active product
+                    {{ __('common.active_product') }}
                 </label>
 
                 @error('is_active')
@@ -159,8 +159,8 @@ new class extends Component
                     wire:loading.attr="disabled"
                     class="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-700 disabled:opacity-50 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
                 >
-                    <span wire:loading.remove>Create product</span>
-                    <span wire:loading>Creating...</span>
+                    <span wire:loading.remove>{{ __('common.create_product') }}</span>
+                    <span wire:loading>{{ __('common.creating') }}</span>
                 </button>
             </div>
         </form>
@@ -170,11 +170,11 @@ new class extends Component
         @if ($this->products->isEmpty())
             <div class="flex flex-col items-center gap-3 py-12 text-center">
                 <h2 class="text-lg font-medium text-zinc-900 dark:text-white">
-                    No products yet
+                    {{ __('common.no_products_yet') }}
                 </h2>
 
                 <p class="text-sm text-zinc-600 dark:text-zinc-400">
-                    Products added to this workspace will appear here.
+                    {{ __('common.products_added_to_workspace') }}
                 </p>
             </div>
         @else
@@ -182,10 +182,10 @@ new class extends Component
                 <table class="w-full text-left text-sm">
                     <thead class="bg-neutral-50 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300">
                         <tr>
-                            <th class="px-4 py-3 font-medium">SKU</th>
-                            <th class="px-4 py-3 font-medium">Product name</th>
-                            <th class="px-4 py-3 font-medium">Description</th>
-                            <th class="px-4 py-3 font-medium">Status</th>
+                            <th class="px-4 py-3 font-medium">{{ __('common.sku') }}</th>
+                            <th class="px-4 py-3 font-medium">{{ __('common.product_name') }}</th>
+                            <th class="px-4 py-3 font-medium">{{ __('common.description') }}</th>
+                            <th class="px-4 py-3 font-medium">{{ __('common.status') }}</th>
                         </tr>
                     </thead>
 
@@ -207,11 +207,11 @@ new class extends Component
                                 <td class="px-4 py-3">
                                     @if ($product->is_active)
                                         <span class="text-green-700 dark:text-green-400">
-                                            Active
+                                            {{ __('common.active') }}
                                         </span>
                                     @else
                                         <span class="text-zinc-500">
-                                            Inactive
+                                            {{ __('common.inactive') }}
                                         </span>
                                     @endif
                                 </td>
