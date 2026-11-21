@@ -60,4 +60,11 @@ return [
     'no_products_yet' => 'Ainda não existem produtos',
     'products_added_to_workspace' => 'Os produtos adicionados a esta área de trabalho aparecerão aqui.',
     'product_created' => 'Produto criado com sucesso.',
+    'unit_each' => 'Unidade (peça)',
+    'unit_milligram' => 'Miligrama',
+    'unit_gram' => 'Grama',
+    'unit_milliliter' => 'Mililitro',
+    'unit_millimeter' => 'Milímetro',
+    'unit_centimeter' => 'Centímetro',
+    'base_unit' => 'Unidade base',
 ];

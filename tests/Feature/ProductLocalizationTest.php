@@ -89,6 +89,7 @@ test('user can create a product and receives a translated success message', func
         'sku' => 'FRAME-001',
         'name' => 'Handcrafted Picture Frame',
         'description' => 'Wooden picture frame',
+        'base_unit_code' => 'ea',
         'is_active' => true,
     ]);
 })->with([
@@ -97,6 +98,44 @@ test('user can create a product and receives a translated success message', func
     'Brazilian Portuguese' => ['pt_BR', 'Produto criado com sucesso.'],
     'European Portuguese' => ['pt_PT', 'Produto criado com sucesso.'],
 ]);
+
+it('user can create a product with a custom base unit', function () {
+    $user = User::factory()->create([
+        'email_verified_at' => now(),
+        'locale' => 'en',
+    ]);
+
+    $company = Company::create([
+        'name' => 'Test Company',
+        'slug' => 'test-company-custom-unit',
+        'created_by' => $user->id,
+    ]);
+
+    $user->companies()->attach($company->id, [
+        'role' => 'owner',
+    ]);
+
+    $this->actingAs($user)
+        ->withSession(['active_company_id' => $company->id]);
+
+    app(CurrentCompany::class)->set($company);
+    app()->setLocale('en');
+
+    Livewire::test('products')
+        ->set('sku', 'GRAM-001')
+        ->set('name', 'Flour')
+        ->set('base_unit_code', 'g')
+        ->call('save')
+        ->assertHasNoErrors()
+        ->assertSee('Product created successfully.');
+
+    $this->assertDatabaseHas('products', [
+        'company_id' => $company->id,
+        'sku' => 'GRAM-001',
+        'name' => 'Flour',
+        'base_unit_code' => 'g',
+    ]);
+});
 
 test('invalid product data is rejected without creating a product', function () {
     $user = User::factory()->create([
@@ -126,4 +165,39 @@ test('invalid product data is rejected without creating a product', function () 
         ->assertHasErrors(['sku', 'name']);
 
     $this->assertDatabaseCount('products', 0);
+});
+
+test('unsupported base unit is rejected without creating a product', function () {
+    $user = User::factory()->create([
+        'email_verified_at' => now(),
+        'locale' => 'en',
+    ]);
+
+    $company = Company::create([
+        'name' => 'Test Company',
+        'slug' => 'test-company-invalid-unit',
+        'created_by' => $user->id,
+    ]);
+
+    $user->companies()->attach($company->id, [
+        'role' => 'owner',
+    ]);
+
+    $this->actingAs($user)
+        ->withSession(['active_company_id' => $company->id]);
+
+    app(CurrentCompany::class)->set($company);
+    app()->setLocale('en');
+
+    Livewire::test('products')
+        ->set('sku', 'INVALID-UNIT-001')
+        ->set('name', 'Invalid Unit Product')
+        ->set('base_unit_code', 'xyz')
+        ->call('save')
+        ->assertHasErrors(['base_unit_code']);
+
+    $this->assertDatabaseMissing('products', [
+        'company_id' => $company->id,
+        'sku' => 'INVALID-UNIT-001',
+    ]);
 });

@@ -11,6 +11,7 @@ class Product extends Model
         'sku',
         'name',
         'description',
+        'base_unit_code',
         'is_active',
     ];
 

@@ -60,4 +60,11 @@ return [
     'no_products_yet' => 'No products yet',
     'products_added_to_workspace' => 'Products added to this workspace will appear here.',
     'product_created' => 'Product created successfully.',
+    'unit_each' => 'Each (piece)',
+    'unit_milligram' => 'Milligram',
+    'unit_gram' => 'Gram',
+    'unit_milliliter' => 'Milliliter',
+    'unit_millimeter' => 'Millimeter',
+    'unit_centimeter' => 'Centimeter',
+    'base_unit' => 'Base unit',
 ];

@@ -16,6 +16,8 @@ new class extends Component
 
     public string $description = '';
 
+    public string $base_unit_code = 'ea';
+
     public bool $is_active = true;
 
     public function mount(): void
@@ -37,12 +39,18 @@ new class extends Component
             ],
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:5000'],
+            'base_unit_code' => [
+             'required',
+             'string',
+              Rule::in(array_keys(config('openstock.units.supported'))),
+            ],
             'is_active' => ['required', 'boolean'],
         ]);
 
         app(CreateProduct::class)->handle($validated);
 
         $this->reset('sku', 'name', 'description');
+        $this->base_unit_code = config('openstock.units.default');
         $this->is_active = true;
 
         unset($this->products);
@@ -121,6 +129,28 @@ new class extends Component
                 </div>
             </div>
 
+                            <div>
+                <label for="base_unit_code" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                    {{ __('common.base_unit') }} *
+                </label>
+
+                <select
+                    id="base_unit_code"
+                    wire:model="base_unit_code"
+                    class="mt-2 block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white"
+                >
+                    @foreach (config('openstock.units.supported') as $code => $unit)
+                        <option value="{{ $code }}">
+                            {{ __('common.' . $unit['label']) }} ({{ $code }})
+                        </option>
+                    @endforeach
+                </select>
+
+                @error('base_unit_code')
+                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
             <div>
                 <label for="description" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
                     {{ __('common.description') }}
@@ -184,6 +214,7 @@ new class extends Component
                         <tr>
                             <th class="px-4 py-3 font-medium">{{ __('common.sku') }}</th>
                             <th class="px-4 py-3 font-medium">{{ __('common.product_name') }}</th>
+                            <th class="px-4 py-3 font-medium">{{ __('common.base_unit') }}</th>
                             <th class="px-4 py-3 font-medium">{{ __('common.description') }}</th>
                             <th class="px-4 py-3 font-medium">{{ __('common.status') }}</th>
                         </tr>
@@ -198,6 +229,11 @@ new class extends Component
 
                                 <td class="px-4 py-3 font-medium text-zinc-900 dark:text-white">
                                     {{ $product->name }}
+                                </td>
+
+                                <td class="px-4 py-3 text-zinc-600 dark:text-zinc-400">
+                                    {{ __('common.' . config('openstock.units.supported')[$product->base_unit_code]['label']) }}
+                                    ({{ $product->base_unit_code }})
                                 </td>
 
                                 <td class="px-4 py-3 text-zinc-600 dark:text-zinc-400">
